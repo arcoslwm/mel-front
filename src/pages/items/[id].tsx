@@ -34,7 +34,7 @@ export const getServerSideProps = (async ({ params, query }) => {
 })
 
 
-export default function Item({error, item }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Item({ error, item }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
     if (error) {
         return <Error statusCode={error.statusCode} title={error.message} />
@@ -44,21 +44,40 @@ export default function Item({error, item }: InferGetServerSidePropsType<typeof 
             className={`flex min-h-screen flex-col items-center p-4 ${inter.className}`}
         >
             {item && (
-                <div key={item.id} className=' bg-slate-50 border rounded-md"'>
-                    <div>
-                        <Image
-                            src={item.picture}
-                            width={240}
-                            height={240}
-                            className="block"
-                            alt={item.title}
-                        />
+                <div className="max-w-4xl mx-auto bg-gray-100 rounded-lg overflow-hidden shadow-lg p-8">
+                    <div className="flex">
+                        <div className="w-2/3 pr-8">
+                            <img src={item.picture} alt={item.title} className="w-full rounded-lg" />
+                        </div>
+
+                        <div className="w-1/3">
+                            <p className="text-sm text-gray-500">{(item.condition == 'new') ? 'Nuevo' : ''}</p>
+
+                            <h2 className="text-lg font-semibold mb-2">{item.title}</h2>
+
+                            <p className="text-xl font-semibold mb-2">${item.price.amount} {item.price.currency}</p>
+
+                            
+                                <p className="text-sm text-gray-500 mb-4">{(item.free_shipping) ? 'Despacho gratis' : ''}</p>
+
+                            <a href="" className="block bg-blue-500 text-white text-center py-2 rounded-md hover:bg-blue-600">
+                                Comprar
+                            </a>
+                        </div>
                     </div>
-                    <div>
-                        <h1>nombre: {item.title}</h1>
-                        <p>precio: {item.price.amount}</p>
-                        <p>descripcion: {item.description}</p>
-                    </div>
+                    {item.description && (
+                        <div className="mt-8">
+                            <h3 className="text-lg font-semibold mb-2">Descripción del Producto</h3>
+                            <p className="text-sm text-gray-700">
+                                {item.description.split('\n').map((line, index) => (
+                                    <span key={index}>
+                                        {line}
+                                        <br />
+                                    </span>
+                                ))}
+                            </p>
+                        </div>
+                    )}
                 </div>
             )}
         </main>

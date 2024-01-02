@@ -47,7 +47,7 @@ export default function Items({ error, categories, items }: InferGetServerSidePr
                 <Breadcrumbs items={categories} />
                 <ul role="list" className="p-6 divide-y bg-slate-50 divide-slate-200 border rounded-md">
                     {items.map((item) => (
-                        <li className="flex items-center w-full border-b border-gray-200 py-4">
+                        <li key={item.id} className="flex items-center w-full border-b border-gray-200 py-4">
                             <Link className="flex w-full" href={{ pathname: '/items/[id]', query: { id: item.id } }}>
                                 <div className="flex-shrink-0 mr-4">
                                     <Image src={item.picture} alt={item.title} width={112} height={112} />
