@@ -35,7 +35,14 @@ npm run dev
 
 abrir [http://localhost:3000](http://localhost:3000) para ver la aplicación
 
+## To Do
 
-## Todo
+mejoras pendientes:
+-mejorar error de bad request
+-corregir comportamiento de recarga de pagina en links no implementados.
 - modificar estilos ya que toma colores del tema del sistema operativo.
+- manejo de urls, endpoints
 - agregar tests
+- agregar SEO, y cahe(?)
+-para SEO: The Head Component in Next.js allows you to modify the <head> of a page. Learn more in the Head Component documentation.
+(https://nextjs.org/docs/pages/api-reference/components/head)
