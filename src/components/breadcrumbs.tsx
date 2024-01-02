@@ -17,7 +17,7 @@ const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
                         <a className="flex items-center text-sm text-gray-500 hover:text-blue-600 focus:outline-none focus:text-blue-600 dark:focus:text-blue-500" href="">
                             {item}
                             <svg
-                                className="flex-shrink-0 mx-2 overflow-visible h-4 w-4 text-gray-400 dark:text-neutral-600 dark:text-neutral-600"
+                                className="flex-shrink-0 mx-2 overflow-visible h-4 w-4 text-gray-400 dark:text-neutral-600"
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="24"
                                 height="24"
