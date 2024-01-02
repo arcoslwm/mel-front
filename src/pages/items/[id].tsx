@@ -20,9 +20,11 @@ const inter = Inter({ subsets: ['latin'] })
 /**
  * https://nextjs.org/docs/pages/api-reference/functions/get-server-side-props
  */
-export const getServerSideProps = (async ({ params, query }) => {
-    const itemResp = await getItem(params.id);
-    console.debug("getServerSideProps itemResp", itemResp);
+export const getServerSideProps: GetServerSideProps = (async ({ params }) => {
+    const { id } = params || {};
+
+    const itemId = id as string;
+    const itemResp = await getItem(itemId);
     if (!itemResp) {
         return { notFound: true }
     }
@@ -69,7 +71,7 @@ export default function Item({ error, item }: InferGetServerSidePropsType<typeof
                         <div className="mt-8">
                             <h3 className="text-lg font-semibold mb-2">Descripción del Producto</h3>
                             <p className="text-sm text-gray-700">
-                                {item.description.split('\n').map((line, index) => (
+                                {item.description.split('\n').map((line: string, index:number) => (
                                     <span key={index}>
                                         {line}
                                         <br />

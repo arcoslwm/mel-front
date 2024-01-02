@@ -11,16 +11,20 @@ import Breadcrumbs from '@/components/breadcrumbs';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const getServerSideProps = (async ({ params, query }) => {
+export const getServerSideProps: GetServerSideProps = (async ({ query }) => {
     // serverSide exec
     let error = null;
-    const searchQuery: string = query.search;
+    let searchQuery: string = '';
+    if (typeof query.search === 'string') {
+        searchQuery = query.search;
+    } else if (Array.isArray(query.search)) {
+        searchQuery = query.search[0];
+    }
+
 
     const searchResult = await searchItems(searchQuery);
-    console.debug("getServerSideProps:searchResult:", searchResult);
 
     if (searchResult.statusCode) {
-        console.debug("searchResult.statusCode so ERROR!");
         error = { message: searchResult.message, statusCode: searchResult.statusCode };
     }
 
@@ -31,10 +35,10 @@ export const getServerSideProps = (async ({ params, query }) => {
 
 export default function Items({ error, categories, items }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
+    const router = useRouter();
     if (error) {
         return <Error statusCode={error.statusCode} title={error.message} />
     }
-    const router = useRouter();
     const navigateToDetail = (id: string) => {
         router.push(`/items/${id}`);
     };
@@ -46,7 +50,7 @@ export default function Items({ error, categories, items }: InferGetServerSidePr
             <div className=' bg-slate-50 rounded-md"'>
                 <Breadcrumbs items={categories} />
                 <ul role="list" className="p-6 divide-y bg-slate-50 divide-slate-200 border rounded-md">
-                    {items.map((item) => (
+                    {items.map((item: any) => (
                         <li key={item.id} className="flex items-center w-full border-b border-gray-200 py-4">
                             <Link className="flex w-full" href={{ pathname: '/items/[id]', query: { id: item.id } }}>
                                 <div className="flex-shrink-0 mr-4">
