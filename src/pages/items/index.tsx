@@ -8,6 +8,7 @@ import { searchItems } from '@/lib/api-client';
 import Image  from "next/image";
 import Link from "next/link";
 import Error from 'next/error'
+import Breadcrumbs from '@/components/breadcrumbs';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -43,8 +44,8 @@ export default function Items ({error, categories, items }: InferGetServerSidePr
         <main
             className={`flex min-h-screen flex-col items-center p-4 ${inter.className}`}
         >
-            <div className=' bg-slate-50 border rounded-md"'>
-                <h1>Resultados de la búsqueda</h1>
+            <div className=' bg-slate-50 rounded-md"'>
+                <Breadcrumbs items={categories}  />
                 <ul role="list" className="p-6 divide-y bg-slate-50 divide-slate-200 border rounded-md">
                     {items.map((item) => (
                         <li key={item.id} className="flex py-3 mx-auto">
