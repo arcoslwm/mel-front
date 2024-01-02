@@ -1,11 +1,10 @@
 import { Inter } from 'next/font/google'
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-// import ListItem from "@/components/list-item";
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Item from './[id]';
 import { searchItems } from '@/lib/api-client';
-import Image  from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import Error from 'next/error'
 import Breadcrumbs from '@/components/breadcrumbs';
@@ -30,8 +29,8 @@ export const getServerSideProps = (async ({ params, query }) => {
 }) satisfies GetServerSideProps<{ error: any, categories: any, items: any }>
 
 
-export default function Items ({error, categories, items }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-    
+export default function Items({ error, categories, items }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+
     if (error) {
         return <Error statusCode={error.statusCode} title={error.message} />
     }
@@ -45,24 +44,30 @@ export default function Items ({error, categories, items }: InferGetServerSidePr
             className={`flex min-h-screen flex-col items-center p-4 ${inter.className}`}
         >
             <div className=' bg-slate-50 rounded-md"'>
-                <Breadcrumbs items={categories}  />
+                <Breadcrumbs items={categories} />
                 <ul role="list" className="p-6 divide-y bg-slate-50 divide-slate-200 border rounded-md">
                     {items.map((item) => (
-                        <li key={item.id} className="flex py-3 mx-auto">
-                            <Image
-                                src={item.picture}
-                                width={90}
-                                height={90}
-                                className="block h-24 w-24"
-                                alt={item.title}
-                            />
-                            <Link className="font-semibold text-sm" key={item.id} href={{ pathname: '/items/[id]', query: { id: item.id } }}>
-                                <div className="ml-2 hover:bg-slate-400">
-                                    {item.price.amount}
-                                    {item.title}
+                        <li className="flex items-center w-full border-b border-gray-200 py-4">
+                            <Link className="flex w-full" href={{ pathname: '/items/[id]', query: { id: item.id } }}>
+                                <div className="flex-shrink-0 mr-4">
+                                    <Image src={item.picture} alt={item.title} width={112} height={112} />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <h3 className="text-lg font-semibold mb-1">{item.title}</h3>
+
+                                    <p className="text-gray-700 font-medium mb-2">${item.price.amount} {item.price.currency}</p>
+
+                                    <p className="text-sm text-gray-500">
+                                        {(item.condition == 'new') ? 'Nuevo' : ''}
+                                    </p>
+                                    <p className="text-sm text-gray-500">
+                                        {(item.free_shipping) ? 'Despacho gratis' : ''}
+                                    </p>
                                 </div>
                             </Link>
                         </li>
+
                     ))}
                 </ul>
             </div>
