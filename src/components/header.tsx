@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import Image  from "next/image";
 import React, { useState } from "react";
+import Link from "next/link";
 
 const Header = ({ title }: any) => {
     // console.log("Header titledesc:",title);
@@ -18,13 +19,15 @@ const Header = ({ title }: any) => {
         // rgba(255, 241, 89, 1)
         // bg-yellow-300
         <div className="flex items-center p-3 bg-meli-yellow">
+            <Link className="" key={'home'} href={{pathname:'/'}}>
             <Image
                 src="/logo__large_plus.png"
                 width={134}
                 height={34}
                 className="block mx-5"
                 alt="Logo MeLi"
-            />
+                />
+            </Link>
             <div className="header min-h-fit flex-col items-center">
                 <input
                     type="text"

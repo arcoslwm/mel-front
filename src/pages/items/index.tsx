@@ -1,62 +1,70 @@
 import { Inter } from 'next/font/google'
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import ListItem from "@/components/list-item";
+// import ListItem from "@/components/list-item";
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import Item from './[id]';
+import { searchItems } from '@/lib/api-client';
+import Image  from "next/image";
+import Link from "next/link";
+import Error from 'next/error'
 
 const inter = Inter({ subsets: ['latin'] });
 
-const Items = () => {
-    // Obtener los datos de búsqueda
-    const { search } = useRouter().query;
-    console.log("Items: search:",search);
+export const getServerSideProps = (async ({ params, query }) => {
+    // serverSide exec
+    let error = null;
+    const searchQuery: string = query.search;
 
-    // Obtener los resultados de la búsqueda
-    const [results, setResults] = useState([]);
+    const searchResult = await searchItems(searchQuery);
+    console.debug("getServerSideProps:searchResult:", searchResult);
+
+    if (searchResult.statusCode) {
+        console.debug("searchResult.statusCode so ERROR!");
+        error = { message: searchResult.message, statusCode: searchResult.statusCode };
+    }
+
+    return { props: { error: error, categories: searchResult.categories || null, items: searchResult.items || null } }
+
+}) satisfies GetServerSideProps<{ error: any, categories: any, items: any }>
+
+
+export default function Items ({error, categories, items }: InferGetServerSidePropsType<typeof getServerSideProps>) {
     
+    if (error) {
+        return <Error statusCode={error.statusCode} title={error.message} />
+    }
     const router = useRouter();
     const navigateToDetail = (id: string) => {
         router.push(`/items/${id}`);
     };
 
-    // Cargar los resultados de la búsqueda
-    const fetchResults = async () => {
-        // Simular una solicitud de API
-        // const response = await fetch(`/api/items?search=${searchTerm}`);
-        // const data = await response.json();
-        // const result = [] as any;
-        // const data = {'items':[{'id':"mel-001"},{'id':"mel-001"}]} as any;
-        const data = [{'id':"MLA1573435560", title: "Audifonos ss"},{'id':"MLA1573435560", title: "Audifonos AA"}] as any;
-        // Establecer los resultados
-        setResults(data);
-    };
-
-    useEffect(() => {
-        fetchResults();
-    }, [search]);
-
     return (
         <main
-            // className={`flex w-4/5 min-h-screen flex-col items-center p-4 ${inter.className}`}
             className={`flex min-h-screen flex-col items-center p-4 ${inter.className}`}
         >
-             <div className=' bg-slate-50 border rounded-md"'>
-             <h1>Resultados de la búsqueda</h1>
-                {results.map((result) => (
-                    <div key={result.title}>
-                        <h2>{result.id}</h2>
-                        <button onClick={() => navigateToDetail(result.id)}>Ver detalle</button>
-                    </div>
-                ))}
-                <p>======================================</p>
-                <ul  role="list" className="p-6 divide-y bg-slate-50 divide-slate-200 border rounded-md">
-                    {results.map((result) => (
-                        <ListItem  key={"it"+result.title} itemId={result.id} itemTitle={result.title} >
-
-                        </ListItem>
+            <div className=' bg-slate-50 border rounded-md"'>
+                <h1>Resultados de la búsqueda</h1>
+                <ul role="list" className="p-6 divide-y bg-slate-50 divide-slate-200 border rounded-md">
+                    {items.map((item) => (
+                        <li key={item.id} className="flex py-3 mx-auto">
+                            <Image
+                                src={item.picture}
+                                width={90}
+                                height={90}
+                                className="block h-24 w-24"
+                                alt={item.title}
+                            />
+                            <Link className="font-semibold text-sm" key={item.id} href={{ pathname: '/items/[id]', query: { id: item.id } }}>
+                                <div className="ml-2 hover:bg-slate-400">
+                                    {item.price.amount}
+                                    {item.title}
+                                </div>
+                            </Link>
+                        </li>
                     ))}
                 </ul>
-             </div>
+            </div>
         </main>
     );
-};
-export default Items;
+}

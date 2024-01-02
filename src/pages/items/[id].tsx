@@ -3,70 +3,61 @@ import React from "react";
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next'
 import Image from "next/image";
 import { getItem } from '@/lib/api-client';
+import Error from 'next/error'
 
 
 const inter = Inter({ subsets: ['latin'] })
 
-type Item = {
-    id: string
-    title: string
-    price: number
-    text: string
-    plain_text: string
-    date_created: string
-    last_updated: string
-}
+// type Item = {
+//     id: string
+//     title: string
+//     price: number
+//     text: string
+//     plain_text: string
+//     date_created: string
+//     last_updated: string
+// }
 /**
  * https://nextjs.org/docs/pages/api-reference/functions/get-server-side-props
  */
-export const getServerSideProps = (async ({params, query}) => {
-    // serverSide exec
-    // console.debug("getServerSideProps context:",context);
-    // console.debug("getServerSideProps context.params:", params);
-    console.debug("======================================");
-    
-    // Fetch data from external API
-    const itemDesc = await getItem(params.id);
-    if (!itemDesc) {
+export const getServerSideProps = (async ({ params, query }) => {
+    const itemResp = await getItem(params.id);
+    console.debug("getServerSideProps itemResp", itemResp);
+    if (!itemResp) {
         return { notFound: true }
     }
-    // console.debug("getServerSideProps getItem:",itemDesc);
-
-    const item = {
-        id: params.id,
-        title: "audifonos-" + params.id,
-        price: 1590,
-        ...itemDesc,
+    else if (itemResp.item) {
+        return { props: { item: itemResp.item, error: null } }
+    } else {
+        return { props: { error: { message: itemResp.message, statusCode: itemResp.statusCode } } };
     }
-    // Pass data to the page via props
-    return { props: { item } }
-}) satisfies GetServerSideProps<{ item: Item }>
+})
 
 
-export default function Item({ item, }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-    //client Exec
-    console.debug("###itemDetail: ", item);
+export default function Item({error, item }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
+    if (error) {
+        return <Error statusCode={error.statusCode} title={error.message} />
+    }
     return (
         <main
             className={`flex min-h-screen flex-col items-center p-4 ${inter.className}`}
         >
             {item && (
-                <div className=' bg-slate-50 border rounded-md"'>
+                <div key={item.id} className=' bg-slate-50 border rounded-md"'>
                     <div>
                         <Image
-                            src="https://http2.mlstatic.com/D_923638-MLA54361048207_032023-I.jpg"
-                            // ref="https://http2.mlstatic.com/D_923638-MLA54361048207_032023-I.jpg"
-                            width={150}
-                            height={150}
+                            src={item.picture}
+                            width={240}
+                            height={240}
                             className="block"
-                            alt="Logo MeLi" />
+                            alt={item.title}
+                        />
                     </div>
                     <div>
-                        <h1>HTML!Item: {item.id}</h1>
                         <h1>nombre: {item.title}</h1>
-                        <p>precio: {item.price}</p>
-                        <p>descripcion: {item.plain_text}</p>
+                        <p>precio: {item.price.amount}</p>
+                        <p>descripcion: {item.description}</p>
                     </div>
                 </div>
             )}

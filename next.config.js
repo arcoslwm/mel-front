@@ -4,12 +4,11 @@ const nextConfig = {
   images:{
     remotePatterns: [
       {
-        protocol: 'https',
+        // protocol: 'https',
         hostname: 'http2.mlstatic.com',
         port: '',
       }
     ]
   }
 }
-
 module.exports = nextConfig
