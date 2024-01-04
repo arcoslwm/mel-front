@@ -1,7 +1,6 @@
 ## Descripción
 aplicación en [Next.js](https://nextjs.org/)  que depende de la api-bff del repo:
 
-
 https://github.com/arcoslwm/mel-bff
 
 ## requisitos:
@@ -38,11 +37,11 @@ abrir [http://localhost:3000](http://localhost:3000) para ver la aplicación
 ## To Do
 
 mejoras pendientes:
--mejorar error de bad request
--corregir comportamiento de recarga de pagina en links no implementados.
-- modificar estilos ya que toma colores del tema del sistema operativo.
-- manejo de urls, endpoints
-- agregar tests
-- agregar SEO, y cahe(?)
--para SEO: The Head Component in Next.js allows you to modify the <head> of a page. Learn more in the Head Component documentation.
+
+- [] mejorar error de bad request para ids (id must match ^MLA\d{1,13}$ regular expression.) (desde api probablemente)
+- [] corregir comportamiento de recarga de pagina en links no implementados.
+- [x] modificar estilos ya que toma colores del tema del sistema operativo. 
+- [] manejo de urls, endpoints
+- [] agregar tests
+- [] agregar SEO, y cahe(?): para SEO: The Head Component in Next.js allows you to modify the <head> of a page. Learn more in the Head Component documentation.
 (https://nextjs.org/docs/pages/api-reference/components/head)
