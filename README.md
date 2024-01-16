@@ -38,7 +38,7 @@ abrir [http://localhost:3000](http://localhost:3000) para ver la aplicación
 
 mejoras pendientes:
 
-- [] mejorar error de bad request para ids (id must match ^MLA\d{1,13}$ regular expression.) (desde api probablemente)
+- [x] mejorar error de bad request para ids (id must match ^MLA\d{1,13}$ regular expression.) (desde api probablemente)
 - [] corregir comportamiento de recarga de pagina en links no implementados.
 - [x] modificar estilos ya que toma colores del tema del sistema operativo. 
 - [] manejo de urls, endpoints
